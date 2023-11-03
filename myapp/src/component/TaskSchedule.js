@@ -12,9 +12,12 @@ const TaskSchedule = () => {
     endDate:""
   })
   const [getTask, setGetTask] = useState([])
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [isChecked, setIsChecked] = useState(false);
   const [checkedIs, setCheckedIs] = useState(false);
   const [isActive, setIsActive] = useState(false);
+  const [activeFilter, setActiveFilter] = useState('all');
 
   const [updtInptHandle, setUpdtInptHandle] = useState({
     id: "",
@@ -33,11 +36,63 @@ const TaskSchedule = () => {
       // const response = await axios.get("https://tasknotifyapi.web2rise.in/api/tasks")
       if (response.data.data) {
         setGetTask(response.data.data)
+        setFilteredUsers(response.data.data);
       }
     } catch (error) {
       console.log(error, "Data is Not Getting")
     }
   }
+
+  // const handleSearchFilter = () => {
+  //   const trimmedQuery = searchQuery.trim();
+  //   const filteredData = getTask.filter((user) => {
+  //     const phoneString = user.phone.toString();
+  //     const matchesPhone = phoneString.includes(trimmedQuery);
+   
+  //     const matchesStatus = activeFilter === 'all' || user.status === activeFilter;
+  
+  //     return matchesPhone && matchesStatus;
+  //   });
+  //   console.log(activeFilter)
+  //       console.log(filteredData, "filteredData")
+  //   setFilteredUsers(filteredData);
+  // }
+
+  const handleSearchFilter = () => {
+    const trimmedQuery = searchQuery.trim();
+    const filteredData = getTask.filter((user) => {
+      if (typeof user.phone === 'number') { 
+          const phoneString = user.phone.toString();
+          const matchesPhone = phoneString.includes(trimmedQuery);
+
+          const matchesStatus = activeFilter === 'all' || user.status === activeFilter;
+  
+      return matchesPhone && matchesStatus;
+          // return phoneString.includes(trimmedQuery);
+      }
+      return false;  
+  });
+    setFilteredUsers(filteredData);a
+  }
+
+  const handleActiveFilter = (e) =>{
+    const selectStatus = e.target.value;
+    setActiveFilter(selectStatus)
+    
+    if(selectStatus==='all'){
+      setFilteredUsers(getTask);
+    }else {
+      // eslint-disable-next-line
+      const filteredStatusData = getTask.filter(
+        (user) => user.status.toLowerCase() === selectStatus.toLowerCase()
+        );
+        
+      setFilteredUsers(filteredStatusData);
+    } 
+  }
+
+  console.log(filteredUsers, "filteredUsers")
+  
 
   const formattedDate = dateGet => {
     const date = new Date(dateGet);
@@ -202,16 +257,22 @@ const TaskSchedule = () => {
     getData()
   }, []);
 
+  useEffect(() => {
+    handleSearchFilter();
+    // eslint-disable-next-line
+  }, [searchQuery]);
+
   return (
     <>
       <div className='display_Head'>
         <a className="create_btn" data-bs-toggle="modal" href="#exampleModalToggle" type="button" onClick={closeModal}>Add New</a>
-        {/* <input type="search" className="search_feild" placeholder="Search..." /> */}
+        <input type="search" className="search_feild" placeholder="Search phone..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}/>
         {/* <a className="logout_btn">Logout</a> */}
-        {/* <select>
-        <option>1</option>
-        <option>2</option>
-        </select> */}
+        <select onChange={handleActiveFilter}>
+          <option value="all">Select Status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
       </div>
 
       <ul className="user_manage">
@@ -227,7 +288,7 @@ const TaskSchedule = () => {
         <li><b>Edit</b></li>
         <li><b>Delete</b></li>
 
-        {getTask.map((val, i) => {
+        {filteredUsers.map((val, i) => {
           return (<React.Fragment key={i}>
             <li>{1 + i}.</li>
             <li>{val.phone}</li>
@@ -239,7 +300,7 @@ const TaskSchedule = () => {
             <li>{val.status}</li>
             <li><i className="fa fa-eye" aria-hidden="true"></i></li>
             <li><button type="button" data-bs-toggle="modal" data-bs-target="#exampleModalToggleedit" onClick={() => editData(val)}><i className="fa fa-pencil-square-o" aria-hidden="true"></i></button></li>
-            {getTask.length === 1 ? <li><div > <i style={{ cursor: "no-drop", color: "#ccc" }} className="fa fa-trash" aria-hidden="true" ></i></div></li> : <li><div onClick={() => deleteData(val.id)}> <i className="fa fa-trash" aria-hidden="true"></i> </div></li>}
+            {filteredUsers.length === 1 ? <li><div > <i style={{ cursor: "no-drop", color: "#ccc" }} className="fa fa-trash" aria-hidden="true" ></i></div></li> : <li><div onClick={() => deleteData(val.id)}> <i className="fa fa-trash" aria-hidden="true"></i> </div></li>}
           </React.Fragment>)
         })}
       </ul>

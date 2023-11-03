@@ -333,7 +333,7 @@ ul li {
     background-color: #ffffff;
     padding         : 8px;
     border-bottom   : 3px solid #1f262d;
-    font-size       : 20px;
+    font-size       : 18px;
 }
 
 ul.user_manage li:nth-child(1) {
@@ -418,7 +418,7 @@ ul li i.fa-trash {
 a.create_btn {
     padding              : 15px 29px;
     display              : inline-block;
-    margin               : 25px 0 0 25px;
+    /* margin               : 25px 0 0 25px; */
     background-color     : #1f262d;
     color                : #ffffff;
     text-decoration      : none;
@@ -505,7 +505,7 @@ a.logout_btn {
 a.create_btn {
     padding              : 15px 29px;
     display              : inline-block;
-    margin               : 25px 0 0 25px;
+    /* margin               : 25px 0 0 25px; */
     background-color     : #1f262d;
     color                : #ffffff;
     text-decoration      : none;
@@ -617,7 +617,7 @@ a.create_btn {
 }
 
 input.search_feild {
-    margin-top: 25px;
+    /* margin-top: 25px; */
     padding   : 11px;
     width     : 400px;
 }
@@ -625,7 +625,7 @@ input.search_feild {
 .display_Head {
     display        : flex;
     align-items    : center;
-    justify-content: space-between;
+    justify-content: space-between;padding:30px 30px 0px 30px;;
 }
 
 input.search_feild:focus-visible {
@@ -705,6 +705,10 @@ i.fa.fa-pencil-square-o {
 .selectreminder select {
     padding: 6px;
     width: 100%;
+}
+.display_Head select {
+    padding: 6px;
+    width: 10%;
 }
 
 .selectreminder label {
